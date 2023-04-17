@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Formatters;
+﻿/*using Microsoft.AspNetCore.Mvc.Formatters;
 using System.Reflection.Metadata;
 using System.Text;
 
@@ -46,3 +46,4 @@ namespace CourseLibrary.API.Helpers
         }
     }
 }
+*/

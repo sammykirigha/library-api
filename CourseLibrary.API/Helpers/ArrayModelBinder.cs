@@ -28,7 +28,6 @@ namespace CourseLibrary.API.Helpers
             //the isnt null or withe space
             ///and the type of the model is enumerable
             ///get the enumerable's type, and a converter
-            ///
             var elementType = bindingContext.ModelType.GetTypeInfo()
                 .GenericTypeArguments[0];
             var converter = TypeDescriptor.GetConverter(elementType);
@@ -39,7 +38,7 @@ namespace CourseLibrary.API.Helpers
                 .Select(x => converter.ConvertFromString(x.Trim()))
                 .ToArray();
 
-            //create an array of that type, and set it as the model value
+            //create an array of that type, and set it as the model value  
             var typedValues = Array.CreateInstance(elementType,values.Length);
             values.CopyTo(typedValues, 0);
             bindingContext.Model = typedValues;
