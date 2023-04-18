@@ -2,7 +2,7 @@
 
 namespace CourseLibrary.API.Models
 {
-    public abstract class CourseForManipulationDto
+    public abstract class CourseForManipulationDto: IValidatableObject
     {
         [Required(ErrorMessage = "You should fill out a title")]
         [MaxLength(100, ErrorMessage = "The title shouldn't have  more than 100 characters.")]
@@ -10,5 +10,14 @@ namespace CourseLibrary.API.Models
 
         [MaxLength(1500, ErrorMessage = "The Description should have more than 1500 characters")]
         public virtual string Description { get; set; }  = string.Empty;
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if(Title == Description)
+            {
+                yield return new ValidationResult(
+                    "The provided description should be different from title", new[] {"Course"});
+            }
+        }
     }
 }
