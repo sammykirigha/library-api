@@ -120,7 +120,35 @@ public class CourseLibraryRepository : ICourseLibraryRepository
 #pragma warning restore CS8603 // Possible null reference return.
     }
 
-   
+
+    public async Task<IEnumerable<Author>> GetAuthorsAsync(string? mainCategory, string? searchQuery)
+    {
+        if(string.IsNullOrWhiteSpace(mainCategory) && string.IsNullOrWhiteSpace(searchQuery))
+        {
+            return await GetAuthorsAsync();
+        }
+
+        var collection = _context.Authors as IQueryable<Author>;
+
+        if(!string.IsNullOrWhiteSpace(mainCategory))
+        {
+            mainCategory = mainCategory.Trim().ToLower();
+            collection = collection.Where(a => a.MainCategory == mainCategory);
+        }
+
+        if(!string.IsNullOrWhiteSpace(searchQuery))
+        {
+            searchQuery = searchQuery.Trim().ToLower();
+            collection = collection.Where(a => a.MainCategory.Contains(searchQuery) 
+            || a.FirstName.Contains(searchQuery) 
+            || a.LastName.Contains(searchQuery)
+            );
+        }
+
+        return await collection.ToListAsync();
+    }
+
+
     public async Task<IEnumerable<Author>> GetAuthorsAsync()
     {
         return await _context.Authors.ToListAsync();
@@ -148,5 +176,7 @@ public class CourseLibraryRepository : ICourseLibraryRepository
     {
         return (await _context.SaveChangesAsync() >= 0);
     }
+
+    
 }
 
