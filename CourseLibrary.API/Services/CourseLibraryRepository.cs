@@ -1,5 +1,6 @@
 ﻿using CourseLibrary.API.DbContexts;
-using CourseLibrary.API.Entities; 
+using CourseLibrary.API.Entities;
+using CourseLibrary.API.ResourceParameters;
 using Microsoft.EntityFrameworkCore;
 
 namespace CourseLibrary.API.Services;
@@ -121,24 +122,24 @@ public class CourseLibraryRepository : ICourseLibraryRepository
     }
 
 
-    public async Task<IEnumerable<Author>> GetAuthorsAsync(string? mainCategory, string? searchQuery)
+    public async Task<IEnumerable<Author>> GetAuthorsAsync(AuthorsResourceParameters authorsResourceParameters)
     {
-        if(string.IsNullOrWhiteSpace(mainCategory) && string.IsNullOrWhiteSpace(searchQuery))
+        if(authorsResourceParameters == null)
         {
             return await GetAuthorsAsync();
         }
 
         var collection = _context.Authors as IQueryable<Author>;
 
-        if(!string.IsNullOrWhiteSpace(mainCategory))
+        if(!string.IsNullOrWhiteSpace(authorsResourceParameters.MainCategory))
         {
-            mainCategory = mainCategory.Trim().ToLower();
+            var mainCategory = authorsResourceParameters.MainCategory.Trim().ToLower();
             collection = collection.Where(a => a.MainCategory == mainCategory);
         }
 
-        if(!string.IsNullOrWhiteSpace(searchQuery))
+        if(!string.IsNullOrWhiteSpace(authorsResourceParameters.SearchQuery))
         {
-            searchQuery = searchQuery.Trim().ToLower();
+            var searchQuery = authorsResourceParameters.SearchQuery.Trim().ToLower();
             collection = collection.Where(a => a.MainCategory.Contains(searchQuery) 
             || a.FirstName.Contains(searchQuery) 
             || a.LastName.Contains(searchQuery)
