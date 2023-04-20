@@ -9,10 +9,12 @@ namespace CourseLibrary.API.Services;
 public class CourseLibraryRepository : ICourseLibraryRepository 
 {
     private readonly CourseLibraryContext _context;
+    private readonly IPropertyMappingService _propertyMappingService;
 
-    public CourseLibraryRepository(CourseLibraryContext context)
+    public CourseLibraryRepository(CourseLibraryContext context, IPropertyMappingService propertyMappingService)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
+        _propertyMappingService = propertyMappingService ?? throw new ArgumentNullException(nameof(propertyMappingService));
     }
 
     public void AddCourse(Guid authorId, Course course)
@@ -151,6 +153,14 @@ public class CourseLibraryRepository : ICourseLibraryRepository
             || a.FirstName.Contains(searchQuery) 
             || a.LastName.Contains(searchQuery)
             );
+        }
+
+        if(!string.IsNullOrWhiteSpace(authorsResourceParameters.OrderBy))
+        {
+            if(authorsResourceParameters.OrderBy.ToLowerInvariant() == "name") 
+            {
+            collection = collection.OrderBy(a => a.LastName).ThenBy(a => a.LastName);
+            }
         }
 
         return await PageList<Author>.CreateAsync(
