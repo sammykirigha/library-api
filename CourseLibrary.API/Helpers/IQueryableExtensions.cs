@@ -1,13 +1,10 @@
 ﻿using CourseLibrary.API.Services;
-
+using System.Linq.Dynamic.Core;
 namespace CourseLibrary.API.Helpers
 {
     public static class IQueryableExtensions
     {
-        public static IQueryable<T> ApplySort<T>(
-            this IQueryable<T> source, 
-            string orderBy, 
-            Dictionary<string, PropertyMappingValue> mappingDictionary)
+        public static IQueryable<T> ApplySort<T>(this IQueryable<T> source, string orderBy, Dictionary<string, PropertyMappingValue> mappingDictionary)
         {
             if(source == null)
             {
@@ -27,16 +24,16 @@ namespace CourseLibrary.API.Helpers
             var orderByString = string.Empty;
 
             //the orderBy string is separeated by "," so we split it.
-            var orderByAfterClause = orderBy.Split(",");
+            var orderByAfterSplit = orderBy.Split(",");
 
             //apply each orderBy clause
-            foreach(var orderByclause in orderByAfterClause)
+            foreach(var orderByclause in orderByAfterSplit)
             {
                 //trim the orderBy clause, as it might contain leading or trailing spaces. Can't trim the var in foreach, so we use another var
                 var trimmedOrderByClause = orderByclause.Trim();
 
                 //if the sort option ends with "desc" we, order descending, otherwise ascending
-                var orderDescending = trimmedOrderByClause.EndsWith("desc");
+                var orderDescending = trimmedOrderByClause.EndsWith(" desc");
 
                 //remove "asc" or "desc" from the orderBy clause, so we get the property name to look for in the mapping dictionary
                 var indexOfFirstSpace = trimmedOrderByClause.IndexOf(" ");
@@ -66,10 +63,10 @@ namespace CourseLibrary.API.Helpers
                 {
                     orderByString = orderByString + (string.IsNullOrWhiteSpace(orderByString) ? string.Empty : ", ")
                            + destinationProperty
-                           + (orderDescending ? "descending" : "ascending");
+                           + (orderDescending ? " descending" : " ascending");
                 }
             }
-           
+           return source.OrderBy(orderByString);
 
         }
     }

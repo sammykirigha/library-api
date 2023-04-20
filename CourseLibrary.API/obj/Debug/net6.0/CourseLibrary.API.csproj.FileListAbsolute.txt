@@ -165,6 +165,7 @@ D:\PROJECTS\PERSONAL\DOTNET\start-end\CourseLibrary.API\bin\Debug\net6.0\Microso
 D:\PROJECTS\PERSONAL\DOTNET\start-end\CourseLibrary.API\bin\Debug\net6.0\Newtonsoft.Json.dll
 D:\PROJECTS\PERSONAL\DOTNET\start-end\CourseLibrary.API\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 D:\PROJECTS\PERSONAL\DOTNET\start-end\CourseLibrary.API\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll
+D:\PROJECTS\PERSONAL\DOTNET\start-end\CourseLibrary.API\bin\Debug\net6.0\System.Linq.Dynamic.Core.dll
 D:\PROJECTS\PERSONAL\DOTNET\start-end\CourseLibrary.API\obj\Debug\net6.0\staticwebassets\msbuild.CourseLibrary.API.Microsoft.AspNetCore.StaticWebAssets.props
 D:\PROJECTS\PERSONAL\DOTNET\start-end\CourseLibrary.API\obj\Debug\net6.0\staticwebassets\msbuild.build.CourseLibrary.API.props
 D:\PROJECTS\PERSONAL\DOTNET\start-end\CourseLibrary.API\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.CourseLibrary.API.props
