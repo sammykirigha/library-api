@@ -33,7 +33,7 @@ public class AuthorsController : ControllerBase
 
     [HttpGet(Name = "GetAuthors")]
     [HttpHead]
-    public async Task<ActionResult<IEnumerable<AuthorDto>>> GetAuthors(
+    public async Task<IActionResult> GetAuthors(
       [FromQuery] AuthorsResourceParameters authorsResourceParameters
         )
     { 
@@ -63,7 +63,7 @@ public class AuthorsController : ControllerBase
         Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
 
         // return them
-        return Ok(_mapper.Map<IEnumerable<AuthorDto>>(authorsFromRepo));
+        return Ok(_mapper.Map<IEnumerable<AuthorDto>>(authorsFromRepo).ShapeData(authorsResourceParameters.Fields));
     }
 
     private string? CreateAuthorsResourceUri(AuthorsResourceParameters authorsResourceParameters,
@@ -75,6 +75,7 @@ public class AuthorsController : ControllerBase
                 return Url.Link("GetAuthors", 
                     new
                     {
+                      fields = authorsResourceParameters.Fields,
                       orderBy = authorsResourceParameters.OrderBy,
                       pageNumber = authorsResourceParameters.PageNumber - 1,
                       pageSize = authorsResourceParameters.PageSize,
@@ -86,6 +87,7 @@ public class AuthorsController : ControllerBase
                 return Url.Link("GetAuthors",
                      new
                      {
+                         fields = authorsResourceParameters.Fields,
                          orderBy = authorsResourceParameters.OrderBy,
                          pageNumber = authorsResourceParameters.PageNumber + 1,
                          pageSize = authorsResourceParameters.PageSize,
@@ -97,6 +99,7 @@ public class AuthorsController : ControllerBase
                 return Url.Link("GetAuthors",
                     new
                     {
+                        fields = authorsResourceParameters.Fields,
                         orderBy = authorsResourceParameters.OrderBy,
                         pageNumber = authorsResourceParameters.PageNumber,
                         pageSize = authorsResourceParameters.PageSize,
