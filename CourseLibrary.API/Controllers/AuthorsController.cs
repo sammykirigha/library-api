@@ -148,8 +148,35 @@ public class AuthorsController : ControllerBase
             return NotFound();
         }
 
+        var links = CreateLinksForAuthor(authorId, fields);
+
+        var linkedResourceToReturn = _mapper.Map<AuthorDto>(authorFromRepo).ShapeData(fields) as IDictionary<string, object?>;
+
+        linkedResourceToReturn.Add("links", links);
+
         // return author
-        return Ok(_mapper.Map<AuthorDto>(authorFromRepo).ShapeData(fields));
+        return Ok(linkedResourceToReturn);
+    }
+
+    private IEnumerable<LinkDto> CreateLinksForAuthor(Guid authorId, string? fields)
+    {
+        var links = new List<LinkDto>();
+
+        if(string.IsNullOrWhiteSpace(fields))
+        {
+            links.Add(new(Url.Link("GetAuthor", new { authorId }), "self", "GET"));
+        }else
+        {
+            links.Add(
+                new(Url.Link("GetAuthor", new { authorId, fields }), "self", "GET"));
+        }
+
+        links.Add(new(Url.Link("CreateCourseForAuthor", new { authorId }), "create_course_for_author", "POST"));
+
+
+        links.Add(new(Url.Link("GetCoursesForAuthor", new { authorId }), "courses", "GET"));
+
+        return links;
     }
 
     [HttpPost]
