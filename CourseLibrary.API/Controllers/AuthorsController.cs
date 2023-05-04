@@ -204,7 +204,7 @@ public class AuthorsController : ControllerBase
             return NotFound();
         }
 
-        if(parsedMediaType.MediaType == "application/vnd.marvin.hateoas+json")
+        if(parsedMediaType.MediaType == "application/sam.dotnet.hateoas+json")
         {
             var links = CreateLinksForAuthor(authorId, fields);
 
