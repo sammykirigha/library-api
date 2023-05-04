@@ -7,6 +7,7 @@ using CourseLibrary.API.ResourceParameters;
 using CourseLibrary.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Net.Http.Headers;
 using System.Text.Json;
 
 namespace CourseLibrary.API.Controllers;
@@ -174,8 +175,18 @@ public class AuthorsController : ControllerBase
     }
 
     [HttpGet("{authorId}", Name = "GetAuthor")]
-    public async Task<IActionResult> GetAuthor(Guid authorId, string? fields)
+    public async Task<IActionResult> GetAuthor(Guid authorId, string? fields, [FromHeader(Name ="Accept")] string? mediaType)
     {
+
+        if(!MediaTypeHeaderValue.TryParse(mediaType, out var parsedMediaType))
+        {
+            return BadRequest(
+                _problemDetailsFactory.CreateProblemDetails(HttpContext,
+                statusCode: 400,
+                detail: $"Accept header media type value is not a valid media type."
+                )
+                );
+        }
         //text for exception
         if (!_typeHasPropertiesService.TypeHasProperties<AuthorDto>(fields))
         {
@@ -193,14 +204,21 @@ public class AuthorsController : ControllerBase
             return NotFound();
         }
 
-        var links = CreateLinksForAuthor(authorId, fields);
+        if(parsedMediaType.MediaType == "application/vnd.marvin.hateoas+json")
+        {
+            var links = CreateLinksForAuthor(authorId, fields);
 
-        var linkedResourceToReturn = _mapper.Map<AuthorDto>(authorFromRepo).ShapeData(fields) as IDictionary<string, object?>;
+            var linkedResourceToReturn = _mapper.Map<AuthorDto>(authorFromRepo).ShapeData(fields) as IDictionary<string, object?>;
 
-        linkedResourceToReturn.Add("links", links);
+            linkedResourceToReturn.Add("links", links);
 
-        // return author
-        return Ok(linkedResourceToReturn);
+            // return author
+            return Ok(linkedResourceToReturn);
+        }
+
+        return Ok(_mapper.Map<AuthorDto>(authorFromRepo));
+
+       
     }
 
     private IEnumerable<LinkDto> CreateLinksForAuthor(Guid authorId, string? fields)
@@ -224,7 +242,7 @@ public class AuthorsController : ControllerBase
         return links;
     }
 
-    [HttpPost]
+    [HttpPost(Name = "CreateAuthor")]
     public async Task<ActionResult<AuthorDto>> CreateAuthor(AuthorForCreationDto author)
     {
         var authorEntity = _mapper.Map<Entities.Author>(author);

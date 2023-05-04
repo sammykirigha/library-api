@@ -34,7 +34,7 @@ namespace CourseLibrary.API.Helpers
             else
             {
                 //the fields are separated by "," so we split it.
-                var fieldsAfterSplit = fields.Split(',');
+                var fieldsAfterSplit = fields.Split(',');  
 
                 foreach(var field in fieldsAfterSplit)
                 {
