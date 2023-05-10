@@ -60,7 +60,6 @@ namespace CourseLibrary.API.AddConstraints
                     return true;
                 }
             }
-
             return false;
         }
     }

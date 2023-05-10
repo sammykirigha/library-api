@@ -275,7 +275,7 @@ public class AuthorsController : ControllerBase
     [HttpPost(Name = "CreateAuthor")]
     [RequestHeaderMatchesMediaType("Content-Type", "application/json", "application/sam.dotnet.authorforcreation+json")]
     [Consumes("application/json", "application/sam.dotnet.authorforcreation+json")]
-    public async Task<ActionResult<AuthorDto>> CreateAuthor(AuthorForCreationDto author)
+    public async Task<ActionResult<AuthorDto>> AuthorToCreate(AuthorForCreationDto author)
     {
         var authorEntity = _mapper.Map<Author>(author);
 
